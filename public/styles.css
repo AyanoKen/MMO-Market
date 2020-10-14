@@ -1,3 +1,57 @@
 body{
-  background-color: blue;
+  margin: 0;
+}
+
+#title{
+  background-color: #617be3;
+}
+
+.container-fluid{
+  padding: 3% 15%;
+}
+
+.navbar {
+  padding: 0 0 4.5rem;
+}
+
+.nav-item{
+  padding: 0 0.75rem;
+}
+
+.title-image{
+  width: 50%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.account-button{
+  margin: 10% 3% 10% 0;
+}
+
+.buy{
+  padding: 3% 0;
+}
+
+.buy h4{
+  text-align: right;
+}
+
+#offers{
+  background-color: #617be3;
+}
+
+#contact{
+  background-color: #617be3;
+}
+
+#footer{
+  padding: 7% 15% 2%;
+  text-align: center;
+}
+
+#footer p{
+  margin: 20px;
+  color: #8F818F;
+  font-size: 0.8rem;
 }
