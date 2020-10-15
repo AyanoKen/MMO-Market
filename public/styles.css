@@ -6,8 +6,12 @@ body{
   background-color: #617be3;
 }
 
-.container-fluid{
+.containerHome{
   padding: 3% 15%;
+}
+
+.containerMarket{
+  padding: 6% 6% 0;
 }
 
 .navbar {
@@ -37,6 +41,14 @@ body{
   text-align: right;
 }
 
+.table{
+  box-shadow: 0 0 24px black;
+}
+
+.table th, .table td{
+  padding: 2%;
+}
+
 #offers{
   background-color: #617be3;
 }
@@ -46,7 +58,7 @@ body{
 }
 
 #footer{
-  padding: 7% 15% 2%;
+  padding: 2% 15% 2%;
   text-align: center;
 }
 

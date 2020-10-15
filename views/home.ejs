@@ -1,15 +1,7 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>MMO Market</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="styles.css">
-  </head>
-  <body>
+<%- include("partials/header"); %>
 
     <div id="title">
-      <div class="container-fluid">
+      <div class="container-fluid containerHome">
         <nav class="navbar navbar-expand-lg navbar-dark">
           <a href="#" class="navbar-brand">MMO Market</a>
 
@@ -20,19 +12,19 @@
           <div class="collapse navbar-collapse" id="navbarToggler">
             <ul class="navbar-nav ml-auto">
               <li class="nav-item">
-                <a href="#" class="nav-link">Sell</a>
+                <a href="/addItem" class="nav-link">Sell</a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">Buy</a>
+                <a href="/market" class="nav-link">Buy</a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">My Offers</a>
+                <a href="/userOffers" class="nav-link">My Offers</a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">My items on sale</a>
+                <a href="/userItems" class="nav-link">My items on sale</a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">Contact us</a>
+                <a href="/contact" class="nav-link">Contact us</a>
               </li>
             </ul>
           </div>
@@ -41,7 +33,7 @@
         <div class="row">
           <div class="col-lg-6">
             <h1>The one place to buy and sell your in-game valuables.</h1>
-            <button type="button" class="btn btn-outline-light btn-lg account-button">My Account</button>
+            <button type="button" class="btn btn-outline-light btn-lg account-button">Login/Register</button>
           </div>
           <div class="col-lg-6">
             <img src="images/moonMille.png" alt="bird" class="title-image">
@@ -52,41 +44,31 @@
     </div>
 
     <div id="sale">
-      <div class="container-fluid">
+      <div class="container-fluid containerHome">
         <div class="buy">
           <h4>We only accept verified users on our website. So, buy your stuff with no worry of getting scammed</h4>
-          <button type="button" class="btn btn-dark btn-lg account-button">Browse the Market</button>
-          <button type="button" class="btn btn-dark btn-lg account-button">Sell an Item</button>
+          <a type="button" href="/market" class="btn btn-dark btn-lg account-button">Browse the Market</a>
+          <a type="button" href="/addItem" class="btn btn-dark btn-lg account-button">Sell an Item</a>
         </div>
       </div>
     </div>
 
     <div id="offers">
-      <div class="container-fluid">
+      <div class="container-fluid containerHome">
         <h4>Contains information about how the user's offer status are known</h4>
       </div>
     </div>
 
     <div id="sellerItems">
-      <div class="container-fluid">
+      <div class="container-fluid containerHome">
         <h4>Contains information about who are buying the user's items on the market</h4>
       </div>
     </div>
 
     <div id="contact">
-      <div class="container-fluid">
+      <div class="container-fluid containerHome">
         <h4>Contains a way to report scammers to the admins or to report bugs in the software to the admins</h4>
       </div>
     </div>
 
-    <div id = "footer">
-      <p>Made by Kireet</p>
-    </div>
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-  </body>
-</html>
+<%- include("partials/footer"); %>

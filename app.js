@@ -13,6 +13,14 @@ app.get("/", function(req, res){
   res.render("home");
 });
 
+app.get("/market", function(req, res){
+  res.render("market");
+});
+
+app.get("/addItem", function(req, res){
+  res.render("newItem");
+});
+
 app.listen(3000, function(){
   console.log("Server is up and running");
 });
