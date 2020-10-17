@@ -34,7 +34,8 @@ const itemSchema = {
   userIGN: String,
   userServer: String,
   buyerIGN: String,
-  buyerUsername: String
+  buyerUsername: String,
+  itemStatus: String
 };
 
 const userSchema = new mongoose.Schema({
@@ -67,7 +68,7 @@ app.get("/userItems", function(req, res){
 
 app.get("/market", function(req, res){
   if(req.isAuthenticated()){
-    Item.find({}, function(err, results){
+    Item.find({itemStatus: "up"}, function(err, results){
       if(err){
         console.log(err);
       }else{
@@ -105,6 +106,20 @@ app.get("/myItems", function(req, res){
   }
 });
 
+app.get("/myOffers", function(req, res){
+  if(req.isAuthenticated()){
+    Item.find({buyerUsername: req.user.username}, function(err, results){
+      if(err){
+        console.log(err);
+      }else{
+        res.render("userOffers", {items: results});
+      }
+    });
+  }else{
+    res.redirect("/login");
+  }
+});
+
 app.get("/login", function(req, res){
   res.render("login");
 });
@@ -119,16 +134,18 @@ app.get("/logout", function(req, res){
 });
 
 app.post("/market", function(req, res){
-  let itemid = req.body.button;
 
-  Item.findOne({_id: itemid}, function(err, result){
+  Item.findOne({_id: req.body.button}, function(err, result){
     if(err){
       console.log(err);
     }else{
       result.buyerIGN = req.user.username;
       result.buyerUsername = req.user.username;
+      result.itemStatus = "down";
 
       result.save();
+
+      res.redirect("/market");
     }
   });
 });
@@ -139,7 +156,8 @@ app.post("/addItem", function(req, res){
     itemPrice: req.body.itemPrice,
     userName: req.user.username,
     userIGN: req.body.userIGN,
-    userServer: req.body.userServer
+    userServer: req.body.userServer,
+    itemStatus: "up"
   });
 
   item.save();

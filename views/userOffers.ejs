@@ -1,0 +1,30 @@
+<%- include("partials/header"); %>
+
+  <div class="container-fluid containerMarket">
+    <table class="table table-hover table-dark">
+      <thead>
+        <tr>
+          <th scope="col">Item</th>
+          <th scope="col">In Game Name</th>
+          <th scope="col">Server</th>
+          <th scope="col">Price</th>
+          <th scope="col">Seller IGN</th>
+          <th scope="col">Seller Username</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% items.forEach(function(item){ %>
+          <tr>
+            <td><%=item.itemName%></td>
+            <td><%=item.buyerIGN%></td>
+            <td><%=item.userServer%></td>
+            <td><%=item.itemPrice%></td>
+            <td><%=item.userIGN%></td>
+            <td><%=item.userName%></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+<%- include("partials/footer"); %>
