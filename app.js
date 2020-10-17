@@ -64,7 +64,15 @@ app.get("/userItems", function(req, res){
 });
 
 app.get("/market", function(req, res){
-  res.render("market");
+  Item.find({}, function(err, results){
+    if(err){
+      console.log(err);
+    }else{
+      res.render("market", {
+          items: results
+      });
+    }
+  });
 });
 
 app.get("/addItem", function(req, res){
@@ -122,7 +130,7 @@ app.post("/login", function(req, res){
       console.log(err);
     }else{
       passport.authenticate("local")(req, res, function(){
-        res.redirect("/userItems");
+        res.redirect("/");
       });
     }
   });
