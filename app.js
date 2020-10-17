@@ -38,6 +38,12 @@ const itemSchema = {
   itemStatus: String
 };
 
+const reportSchema = {
+  reportType: String,
+  reportDetails: String,
+  reportedBy: String
+}
+
 const userSchema = new mongoose.Schema({
   username: String,
   email: String,
@@ -47,13 +53,13 @@ const userSchema = new mongoose.Schema({
 
 userSchema.plugin(passportLocalMongoose);
 
-const User = new mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema);
+const Item = mongoose.model("Item", itemSchema);
+const Report = mongoose.model("Report", reportSchema);
 
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-
-const Item = mongoose.model("Item", itemSchema);
 
 app.get("/", function(req, res){
   res.render("home");
@@ -121,11 +127,25 @@ app.get("/myOffers", function(req, res){
   }
 });
 
+app.get("/report", function(req, res){
+  if(req.isAuthenticated()){
+    res.render("report");
+  }else{
+    res.redirect("/login");
+  }
+});
+
 app.get("/reports", function(req, res){
   if(req.isAuthenticated() && req.user.admin){
-    console.log("Access given to the Admin");
+    Report.find({}, function(err, results){
+      if(err){
+        console.log(err);
+      }else{
+        res.send(results);
+      }
+    });
   }else{
-    console.log("Not an Admin. Get admin Access");
+    res.redirect("/login");
   }
 });
 
@@ -170,6 +190,17 @@ app.post("/addItem", function(req, res){
   });
 
   item.save();
+  res.redirect("/");
+});
+
+app.post("/report", function(req, res){
+  let report = new Report({
+    reportType: req.body.reportType,
+    reportDetails: req.body.reportDetails,
+    reportedBy: req.user.username
+  });
+
+  report.save();
   res.redirect("/");
 });
 
