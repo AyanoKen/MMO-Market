@@ -1,5 +1,6 @@
 <%- include("partials/header"); %>
 
+<form action="/market" method="post">
   <div class="container-fluid containerMarket">
     <table class="table table-hover table-dark">
       <thead>
@@ -21,11 +22,12 @@
             <td><%=item.userServer%></td>
             <td><%=item.itemPrice%></td>
             <!-- <td><input type="number" style="width: 80px;" name="offeredPrice"></td> -->
-            <td><button type="submit" name="button" class="btn btn-outline-light btn-md">Buy</button></td>
+            <td><button type="submit" name="button" value=<%=item._id%> class="btn btn-outline-light btn-md">Buy</button></td>
           </tr>
         <% }); %>
       </tbody>
     </table>
   </div>
+</form>
 
 <%- include("partials/footer"); %>

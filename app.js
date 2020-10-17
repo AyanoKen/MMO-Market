@@ -32,7 +32,9 @@ const itemSchema = {
   itemPrice: Number,
   userName: String,
   userIGN: String,
-  userServer: String
+  userServer: String,
+  buyerIGN: String,
+  buyerUsername: String
 };
 
 const userSchema = new mongoose.Schema({
@@ -64,19 +66,43 @@ app.get("/userItems", function(req, res){
 });
 
 app.get("/market", function(req, res){
-  Item.find({}, function(err, results){
-    if(err){
-      console.log(err);
-    }else{
-      res.render("market", {
-          items: results
-      });
-    }
-  });
+  if(req.isAuthenticated()){
+    Item.find({}, function(err, results){
+      if(err){
+        console.log(err);
+      }else{
+        res.render("market", {
+            items: results
+        });
+      }
+    });
+  }else{
+    res.redirect("/login");
+  }
 });
 
 app.get("/addItem", function(req, res){
-  res.render("newItem");
+  if(req.isAuthenticated()){
+    res.render("newItem");
+  }else{
+    res.redirect("/login");
+  }
+});
+
+app.get("/myItems", function(req, res){
+  if(req.isAuthenticated()){
+    Item.find({userName: req.user.username}, function(err, results){
+      if(err){
+        console.log(err);
+      }else{
+        res.render("userItems", {
+          items: results
+        });
+      }
+    });
+  }else{
+    res.redirect("/login");
+  }
 });
 
 app.get("/login", function(req, res){
@@ -92,8 +118,22 @@ app.get("/logout", function(req, res){
   res.redirect("/");
 });
 
-app.post("/addItem", function(req, res){
+app.post("/market", function(req, res){
+  let itemid = req.body.button;
 
+  Item.findOne({_id: itemid}, function(err, result){
+    if(err){
+      console.log(err);
+    }else{
+      result.buyerIGN = req.user.username;
+      result.buyerUsername = req.user.username;
+
+      result.save();
+    }
+  });
+});
+
+app.post("/addItem", function(req, res){
   let item = new Item({
     itemName: req.body.itemName,
     itemPrice: req.body.itemPrice,
