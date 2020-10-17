@@ -41,7 +41,8 @@ const itemSchema = {
 const userSchema = new mongoose.Schema({
   username: String,
   email: String,
-  password: String
+  password: String,
+  admin: Boolean
 });
 
 userSchema.plugin(passportLocalMongoose);
@@ -120,6 +121,14 @@ app.get("/myOffers", function(req, res){
   }
 });
 
+app.get("/reports", function(req, res){
+  if(req.isAuthenticated() && req.user.admin){
+    console.log("Access given to the Admin");
+  }else{
+    console.log("Not an Admin. Get admin Access");
+  }
+});
+
 app.get("/login", function(req, res){
   res.render("login");
 });
@@ -165,13 +174,13 @@ app.post("/addItem", function(req, res){
 });
 
 app.post("/register", function(req, res){
-  User.register({username: req.body.username, email: "thekireet@gmail.com"}, req.body.password, function(err, user){
+  User.register({username: req.body.username, email: "thekireet@gmail.com", admin: false}, req.body.password, function(err, user){
     if(err){
       console.log(err);
       res.redirect("/register");
     }else{
       passport.authenticate("local")(req, res, function(){
-        res.redirect("/userItems");
+        res.redirect("/");
       });
     }
   });
