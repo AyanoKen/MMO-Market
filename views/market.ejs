@@ -1,33 +1,44 @@
 <%- include("partials/header"); %>
 
-<form action="/market" method="post">
-  <div class="container-fluid containerMarket">
-    <table class="table table-hover table-dark">
-      <thead>
-        <tr>
-          <th scope="col">Item</th>
-          <th scope="col">Sold by</th>
-          <th scope="col">In Game Name</th>
-          <th scope="col">Server</th>
-          <th scope="col">Price</th>
-          <!-- <th scope="col">Your Offer</th> -->
-        </tr>
-      </thead>
-      <tbody>
-        <% items.forEach(function(item){ %>
+<div class="container-fluid containerMarket">
+  <form action="/marketQuery" method="post">
+    <div class="form-row">
+      <div class="form-group">
+        <input type="text" class="form-control" name="query" placeholder="Search for an Item">
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-dark">Search</button>
+      </div>
+    </div>
+  </form>
+
+  <form action="/market" method="post">
+      <table class="table table-hover table-dark">
+        <thead>
           <tr>
-            <td><%=item.itemName%></td>
-            <td><%=item.userName%></td>
-            <td><%=item.userIGN%></td>
-            <td><%=item.userServer%></td>
-            <td><%=item.itemPrice%></td>
-            <!-- <td><input type="number" style="width: 80px;" name="offeredPrice"></td> -->
-            <td><button type="submit" name="button" value=<%=item._id%> class="btn btn-outline-light btn-md">Buy</button></td>
+            <th scope="col">Item</th>
+            <th scope="col">Sold by</th>
+            <th scope="col">In Game Name</th>
+            <th scope="col">Server</th>
+            <th scope="col">Price</th>
+            <!-- <th scope="col">Your Offer</th> -->
           </tr>
-        <% }); %>
-      </tbody>
-    </table>
-  </div>
-</form>
+        </thead>
+        <tbody>
+          <% items.forEach(function(item){ %>
+            <tr>
+              <td><%=item.itemName%></td>
+              <td><%=item.userName%></td>
+              <td><%=item.userIGN%></td>
+              <td><%=item.userServer%></td>
+              <td><%=item.itemPrice%></td>
+              <!-- <td><input type="number" style="width: 80px;" name="offeredPrice"></td> -->
+              <td><button type="submit" name="button" value=<%=item._id%> class="btn btn-outline-light btn-md">Buy</button></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+  </form>
+</div>
 
 <%- include("partials/footer"); %>

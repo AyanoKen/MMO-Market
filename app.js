@@ -7,6 +7,7 @@ const session = require("express-session");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const findOrCreate = require("mongoose-findorcreate");
 
 const app = express();
 
@@ -48,18 +49,42 @@ const userSchema = new mongoose.Schema({
   username: String,
   email: String,
   password: String,
+  googleId: String,
   admin: Boolean
 });
 
 userSchema.plugin(passportLocalMongoose);
+userSchema.plugin(findOrCreate);
 
 const User = mongoose.model("User", userSchema);
 const Item = mongoose.model("Item", itemSchema);
 const Report = mongoose.model("Report", reportSchema);
 
 passport.use(User.createStrategy());
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
+
+passport.use(new GoogleStrategy({
+    clientID: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    callbackURL: "http://localhost:3000/auth/google/MMO-Market",
+    userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
+    passReqToCallback: true
+  },
+  function(request, accessToken, refreshToken, profile, done) {
+    User.findOrCreate({googleId: profile.id, username: profile.displayName, email: profile._json.email}, function (err, user) {
+      return done(err, user);
+    });
+  }
+));
 
 app.get("/", function(req, res){
   res.render("home");
@@ -149,6 +174,14 @@ app.get("/reports", function(req, res){
   }
 });
 
+app.get('/auth/google', passport.authenticate('google', { scope: [ 'email', 'profile' ] }));
+
+app.get( '/auth/google/MMO-Market',
+    passport.authenticate( 'google', {
+        successRedirect: '/',
+        failureRedirect: '/login'
+}));
+
 app.get("/login", function(req, res){
   res.render("login");
 });
@@ -168,15 +201,42 @@ app.post("/market", function(req, res){
     if(err){
       console.log(err);
     }else{
-      result.buyerIGN = req.user.username;
-      result.buyerUsername = req.user.username;
-      result.itemStatus = "down";
+      if(result.itemStatus == "up"){
+        result.buyerIGN = req.user.username;
+        result.buyerUsername = req.user.username;
+        result.itemStatus = "down";
 
-      result.save();
-
-      res.redirect("/market");
+        result.save();
+        res.redirect("/market");
+      }else{
+        res.redirect("/market");
+      }
     }
   });
+});
+
+app.post("/marketQuery", function(req, res){
+  if(req.body.query == ""){
+    Item.find({itemStatus: "up"}, function(err, results){
+      if(err){
+        console.log(err);
+      }else{
+        res.render("market", {
+            items: results
+        });
+      }
+    });
+  }else{
+    Item.find({itemName: req.body.query, itemStatus: "up"}, function(err, results){
+      if(err){
+        console.log(err);
+      }else{
+        res.render("market", {
+            items: results
+        });
+      }
+    });
+  }
 });
 
 app.post("/addItem", function(req, res){
@@ -237,3 +297,10 @@ app.post("/login", function(req, res){
 app.listen(3000, function(){
   console.log("Server is up and running");
 });
+
+
+
+// TODO:
+// Create functionality to close an item from sale in the "My Items on sale" Route
+// Create a new variable in the Mongoose Item Schema called "Open" which says if the item can be closed for sale
+// Create an automatic garbage collection system which deletes all the closed items in the database after a certain amount of time
