@@ -1,30 +1,31 @@
-<%- include("partials/header"); %>
+<%- include("partials/post-header"); %>
 
   <div class="container-fluid containerMarket">
-    <table class="table table-hover table-dark">
-      <thead>
-        <tr>
-          <th scope="col">Item</th>
-          <th scope="col">In Game Name</th>
-          <th scope="col">Server</th>
-          <th scope="col">Price</th>
-          <th scope="col">Seller IGN</th>
-          <th scope="col">Seller Username</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% items.forEach(function(item){ %>
+    <form action="/closeItem" method="post">
+      <table class="table table-hover table-dark">
+        <thead>
           <tr>
-            <td><%=item.itemName%></td>
-            <td><%=item.buyerIGN%></td>
-            <td><%=item.userServer%></td>
-            <td><%=item.itemPrice%></td>
-            <td><%=item.userIGN%></td>
-            <td><%=item.userName%></td>
+            <th scope="col">Item</th>
+            <th scope="col">Server</th>
+            <th scope="col">Price</th>
+            <th scope="col">Seller IGN</th>
+            <th scope="col">Seller Username</th>
           </tr>
-        <% }); %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% items.forEach(function(item){ %>
+            <tr>
+              <td><%=item.itemName%></td>
+              <td><%=item.userServer%></td>
+              <td><%=item.itemPrice%></td>
+              <td><%=item.userIGN%></td>
+              <td><%=item.userName%></td>
+              <td><button type="submit" name="button" value=<%=item._id%> class="btn btn-outline-light btn-md">Close Item</button></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </form>
   </div>
 
 <%- include("partials/footer"); %>

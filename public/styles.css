@@ -10,11 +10,16 @@ body{
   padding: 3% 15%;
 }
 
+.containerRoutes{
+  padding: 2%;
+  background-color: black;
+}
+
 .containerMarket{
   padding: 6% 6% 0;
 }
 
-.navbar {
+.navbar-home {
   padding: 0 0 4.5rem;
 }
 

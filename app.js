@@ -31,12 +31,14 @@ mongoose.set("useCreateIndex", true);
 const itemSchema = {
   itemName: String,
   itemPrice: Number,
-  userName: String,
+  userID: String,
+  userName: String,        // TODO: Remove username and replace with userID
   userIGN: String,
   userServer: String,
-  buyerIGN: String,
-  buyerUsername: String,
-  itemStatus: String
+  buyerID: String,
+  buyerUsername: String,   // TODO: Remove buyer username and change to buyer id so that admins can check later
+  forSale: Boolean,
+  close: Boolean
 };
 
 const reportSchema = {
@@ -46,7 +48,7 @@ const reportSchema = {
 }
 
 const userSchema = new mongoose.Schema({
-  username: String,
+  username: String,      // TODO: remove username from here lol. This is a privacy leak
   email: String,
   password: String,
   googleId: String,
@@ -79,28 +81,25 @@ passport.use(new GoogleStrategy({
     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
     passReqToCallback: true
   },
-  function(request, accessToken, refreshToken, profile, done) {
-    User.findOrCreate({googleId: profile.id, username: profile.displayName, email: profile._json.email}, function (err, user) {
+  function(request, accessToken, refreshToken, profile, done) {  // TODO: Another place to change if you remove userName
+    User.findOrCreate({googleId: profile.id, username: profile.displayName, email: profile._json.email, admin: false}, function (err, user) {
       return done(err, user);
     });
   }
 ));
 
 app.get("/", function(req, res){
-  res.render("home");
-});
-
-app.get("/userItems", function(req, res){
   if(req.isAuthenticated()){
-    console.log(req.user.email);
+    res.render("home", {query: "/logout", displayText: "Logout"});
   }else{
-    res.redirect("/login");
+    res.render("home", {query: "/login", displayText: "Login/Register"});
   }
+
 });
 
 app.get("/market", function(req, res){
   if(req.isAuthenticated()){
-    Item.find({itemStatus: "up"}, function(err, results){
+    Item.find({forSale: true}, function(err, results){
       if(err){
         console.log(err);
       }else{
@@ -124,7 +123,7 @@ app.get("/addItem", function(req, res){
 
 app.get("/myItems", function(req, res){
   if(req.isAuthenticated()){
-    Item.find({userName: req.user.username}, function(err, results){
+    Item.find({userID: req.user._id, close: false}, function(err, results){
       if(err){
         console.log(err);
       }else{
@@ -140,7 +139,7 @@ app.get("/myItems", function(req, res){
 
 app.get("/myOffers", function(req, res){
   if(req.isAuthenticated()){
-    Item.find({buyerUsername: req.user.username}, function(err, results){
+    Item.find({buyerID: req.user._id, close: false}, function(err, results){
       if(err){
         console.log(err);
       }else{
@@ -186,9 +185,9 @@ app.get("/login", function(req, res){
   res.render("login");
 });
 
-app.get("/register", function(req, res){
-  res.render("register");
-});
+// app.get("/register", function(req, res){
+//   res.render("register");
+// });
 
 app.get("/logout", function(req, res){
   req.logout();
@@ -196,15 +195,14 @@ app.get("/logout", function(req, res){
 });
 
 app.post("/market", function(req, res){
-
   Item.findOne({_id: req.body.button}, function(err, result){
     if(err){
       console.log(err);
     }else{
-      if(result.itemStatus == "up"){
-        result.buyerIGN = req.user.username;
+      if(result.forSale == true && result.userID != req.user._id){
         result.buyerUsername = req.user.username;
-        result.itemStatus = "down";
+        result.buyerID = req.user._id;
+        result.forSale = false;
 
         result.save();
         res.redirect("/market");
@@ -217,17 +215,15 @@ app.post("/market", function(req, res){
 
 app.post("/marketQuery", function(req, res){
   if(req.body.query == ""){
-    Item.find({itemStatus: "up"}, function(err, results){
+    Item.find({forSale: true}, function(err, results){
       if(err){
         console.log(err);
       }else{
-        res.render("market", {
-            items: results
-        });
+        res.redirect("/market")
       }
     });
   }else{
-    Item.find({itemName: req.body.query, itemStatus: "up"}, function(err, results){
+    Item.find({itemName: req.body.query, forSale: true}, function(err, results){
       if(err){
         console.log(err);
       }else{
@@ -243,39 +239,58 @@ app.post("/addItem", function(req, res){
   let item = new Item({
     itemName: req.body.itemName,
     itemPrice: req.body.itemPrice,
+    userID: req.user._id,
     userName: req.user.username,
     userIGN: req.body.userIGN,
     userServer: req.body.userServer,
-    itemStatus: "up"
+    forSale: true,
+    close: false
   });
 
   item.save();
   res.redirect("/");
 });
 
+app.post("/closeItem", function(req, res){
+  Item.findOne({_id: req.body.button}, function(err, result){
+    if(err){
+      console.log(err);
+    }else{
+      if(result.close == false){
+        result.close = true;
+
+        result.save();
+        res.redirect("/");
+      }else{
+        res.redirect("/");
+      }
+    }
+  });
+});
+
 app.post("/report", function(req, res){
   let report = new Report({
     reportType: req.body.reportType,
     reportDetails: req.body.reportDetails,
-    reportedBy: req.user.username
+    reportedBy: req.user.username   //// TODO: Change reported by from username to userID
   });
 
   report.save();
   res.redirect("/");
 });
 
-app.post("/register", function(req, res){
-  User.register({username: req.body.username, email: "thekireet@gmail.com", admin: false}, req.body.password, function(err, user){
-    if(err){
-      console.log(err);
-      res.redirect("/register");
-    }else{
-      passport.authenticate("local")(req, res, function(){
-        res.redirect("/");
-      });
-    }
-  });
-});
+// app.post("/register", function(req, res){
+//   User.register({username: req.body.username, email: "thekireet@gmail.com", admin: true}, req.body.password, function(err, user){
+//     if(err){
+//       console.log(err);
+//       res.redirect("/register");
+//     }else{
+//       passport.authenticate("local")(req, res, function(){
+//         res.redirect("/");
+//       });
+//     }
+//   });
+// });
 
 app.post("/login", function(req, res){
   const user = new User({
@@ -298,9 +313,5 @@ app.listen(3000, function(){
   console.log("Server is up and running");
 });
 
-
-
 // TODO:
-// Create functionality to close an item from sale in the "My Items on sale" Route
-// Create a new variable in the Mongoose Item Schema called "Open" which says if the item can be closed for sale
 // Create an automatic garbage collection system which deletes all the closed items in the database after a certain amount of time
