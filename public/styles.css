@@ -35,7 +35,7 @@ body{
 }
 
 .account-button{
-  margin: 10% 3% 10% 0;
+  margin: 5% 3% 5% 0;
 }
 
 .buy{
@@ -44,6 +44,14 @@ body{
 
 .buy h4{
   text-align: right;
+}
+
+.userItems{
+  text-align: right;
+}
+
+.userItems .account-button{
+  margin-right: 0;
 }
 
 .table{
@@ -58,17 +66,13 @@ body{
   background-color: #617be3;
 }
 
-#contact{
-  background-color: #617be3;
-}
-
 #footer{
-  padding: 2% 15% 2%;
+  padding: 1% 15% 1%;
   text-align: center;
 }
 
 #footer p{
   margin: 20px;
-  color: #8F818F;
+  color: black;
   font-size: 0.8rem;
 }

@@ -3,7 +3,7 @@
     <div id="title">
       <div class="container-fluid containerHome">
         <nav class="navbar navbar-expand-lg navbar-dark navbar-home">
-          <a href="#" class="navbar-brand">MMO Market</a>
+          <a href="/" class="navbar-brand">MMO Market</a>
 
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -24,7 +24,7 @@
                 <a href="/myItems" class="nav-link">My items on sale</a>
               </li>
               <li class="nav-item">
-                <a href="/report" class="nav-link">Contact us</a>
+                <a href="/report" class="nav-link">Report</a>
               </li>
             </ul>
           </div>
@@ -55,20 +55,21 @@
 
     <div id="offers">
       <div class="container-fluid containerHome">
-        <h4>Contains information about how the user's offer status are known</h4>
+        <h4>To know the information about what happened to request on the item you wanted to buy, use the "My Offers" page</h4>
+        <a type="button" href="/myOffers" class="btn btn-outline-light btn-lg account-button">Go to your Offers</a>
+        <div class="userItems">
+          <h4>As for the information about who wants to buy your items, proceed to the "My Items on sale" page</h4>
+          <a type="button" href="/myItems" class="btn btn-outline-light btn-lg account-button">Go to your Offers</a>
+        </div>
       </div>
     </div>
 
-    <div id="sellerItems">
-      <div class="container-fluid containerHome">
-        <h4>Contains information about who are buying the user's items on the market</h4>
+    <div id="contact" class="container-fluid containerHome">
+      <div class="col-sm-8">
+        <p>Contact us and we'll get back to you within 24 hours.</p>
+         <p><i class="fas fa-phone"></i> +00 1515151515</p>
+         <p><i class="fas fa-envelope"></i> myemail@something.com</p>
       </div>
-    </div>
-
-    <div id="contact">
-      <div class="container-fluid containerHome">
-        <h4>Contains a way to report scammers to the admins or to report bugs in the software to the admins</h4>
-      </div>
-    </div>
+		</div>
 
 <%- include("partials/footer"); %>
