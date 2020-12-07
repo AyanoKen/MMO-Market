@@ -32,11 +32,11 @@ const itemSchema = {
   itemName: String,
   itemPrice: Number,
   userID: String,
-  userName: String,        // TODO: Remove username and replace with userID
+  userName: String,
   userIGN: String,
   userServer: String,
   buyerID: String,
-  buyerUsername: String,   // TODO: Remove buyer username and change to buyer id so that admins can check later
+  buyerUsername: String,
   forSale: Boolean,
   close: Boolean
 };
@@ -48,7 +48,7 @@ const reportSchema = {
 }
 
 const userSchema = new mongoose.Schema({
-  username: String,      // TODO: remove username from here lol. This is a privacy leak
+  username: String,
   email: String,
   password: String,
   googleId: String,
@@ -81,7 +81,7 @@ passport.use(new GoogleStrategy({
     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
     passReqToCallback: true
   },
-  function(request, accessToken, refreshToken, profile, done) {  // TODO: Another place to change if you remove userName
+  function(request, accessToken, refreshToken, profile, done) {
     User.findOrCreate({googleId: profile.id, username: profile.displayName, email: profile._json.email, admin: false}, function (err, user) {
       return done(err, user);
     });
@@ -185,10 +185,6 @@ app.get("/login", function(req, res){
   res.render("login");
 });
 
-// app.get("/register", function(req, res){
-//   res.render("register");
-// });
-
 app.get("/logout", function(req, res){
   req.logout();
   res.redirect("/");
@@ -272,12 +268,16 @@ app.post("/report", function(req, res){
   let report = new Report({
     reportType: req.body.reportType,
     reportDetails: req.body.reportDetails,
-    reportedBy: req.user.username   //// TODO: Change reported by from username to userID
+    reportedBy: req.user.username
   });
 
   report.save();
   res.redirect("/");
 });
+
+// app.get("/register", function(req, res){
+//   res.render("register");
+// });
 
 // app.post("/register", function(req, res){
 //   User.register({username: req.body.username, email: "thekireet@gmail.com", admin: true}, req.body.password, function(err, user){
